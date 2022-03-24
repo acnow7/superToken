@@ -1,6 +1,7 @@
 from rest_framework.response import Response
 from rest_framework import status, generics
 from ..serializers.user import UserSerializer
+from ..serializers.ChangePasswordSerializer import ChangePasswordSerializer
 from django.contrib.auth import authenticate, login, logout
 from rest_framework.authtoken.models import Token
 
@@ -60,3 +61,18 @@ class SignOut(generics.DestroyAPIView):
         # Logout will remove all session data
         logout(request)
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class ChangePasswordView(generics.CreateAPIView):
+    serializer_class = ChangePasswordSerializer
+
+    def put(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.save()
+        # if using drf authtoken, create a new token 
+        if hasattr(user, 'auth_token'):
+            user.auth_token.delete()
+        token, created = Token.objects.get_or_create(user=user)
+        # return new token
+        return Response({'token': token.key}, status=status.HTTP_200_OK)

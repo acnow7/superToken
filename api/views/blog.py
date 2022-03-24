@@ -4,7 +4,7 @@ from ..serializers.blog import BlogSerializer, UpdateBlogSerializer
 from ..models.blog import Blog
 from rest_framework import status
 from django.shortcuts import get_object_or_404
-
+from rest_framework.exceptions import PermissionDenied
 
 class BlogsView(APIView):
     def get(self, request):
@@ -26,12 +26,16 @@ class BlogsView(APIView):
 class BlogView(APIView):
     def get(self, request, pk):
         blog = get_object_or_404(Blog, pk=pk)
+        if request.user != blog.author:
+            raise PermissionDenied('Unauthorized user')
         data = BlogSerializer(blog).data
         return Response(data)
 
     def put(self, request, pk):
         request.data['author'] = request.user.id
         blog = get_object_or_404(Blog, pk=pk)
+        if request.user != blog.author:
+            raise PermissionDenied('Unauthorized user')
         updated_blog = UpdateBlogSerializer(blog, data=request.data)
         if updated_blog.is_valid():
             updated_blog.save()
@@ -41,6 +45,8 @@ class BlogView(APIView):
 
     def delete(self, request, pk):
         blog = get_object_or_404(Blog, pk=pk)
+        if request.user != blog.author:
+            raise PermissionDenied('Unauthorized user')
         blog.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 

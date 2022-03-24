@@ -9,7 +9,8 @@ from django.shortcuts import get_object_or_404
 class BlogsView(APIView):
     def get(self, request):
          # filter for mangos with our user id
-        blogs = Blog.objects.filter(author=request.user.id)
+        # blogs = Blog.objects.filter(author=request.user.id)
+        blogs = Blog.objects.all()
         data = BlogSerializer(blogs, many = True).data
         return Response(data)
 
@@ -42,3 +43,10 @@ class BlogView(APIView):
         blog = get_object_or_404(Blog, pk=pk)
         blog.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+class MyBlogsView(APIView):
+    def get(self, request):
+         # filter for mangos with our user id
+        blogs = Blog.objects.filter(author=request.user.id)
+        data = BlogSerializer(blogs, many = True).data
+        return Response(data)

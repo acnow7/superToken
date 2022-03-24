@@ -26,8 +26,6 @@ class BlogsView(APIView):
 class BlogView(APIView):
     def get(self, request, pk):
         blog = get_object_or_404(Blog, pk=pk)
-        if request.user != blog.author:
-            raise PermissionDenied('Unauthorized user')
         data = BlogSerializer(blog).data
         return Response(data)
 
@@ -36,7 +34,7 @@ class BlogView(APIView):
         blog = get_object_or_404(Blog, pk=pk)
         if request.user != blog.author:
             raise PermissionDenied('Unauthorized user')
-        updated_blog = UpdateBlogSerializer(blog, data=request.data)
+        updated_blog = UpdateBlogSerializer(blog, data=request.data, partial=True)
         if updated_blog.is_valid():
             updated_blog.save()
             return Response(updated_blog.data)

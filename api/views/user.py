@@ -2,6 +2,7 @@ from rest_framework.response import Response
 from rest_framework import status, generics
 from ..serializers.user import UserSerializer
 from django.contrib.auth import authenticate, login, logout
+from rest_framework.authtoken.models import Token
 
 class SignUp(generics.CreateAPIView):
         # Override the authentication/permissions classes so this endpoint

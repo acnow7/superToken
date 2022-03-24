@@ -1,6 +1,6 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from ..serializers.blog import BlogSerializer, UpdateBlogSerializer
+from ..serializers.blog import BlogSerializer, UpdateBlogSerializer, BlogSerializer1
 from ..models.blog import Blog
 from rest_framework import status
 from django.shortcuts import get_object_or_404
@@ -16,7 +16,7 @@ class BlogsView(APIView):
 
     def post(self, request):
         request.data['author'] = request.user.id
-        blog = BlogSerializer(data=request.data)
+        blog = BlogSerializer1(data=request.data)
         if blog.is_valid():
             blog.save()
             return Response(blog.data, status=status.HTTP_201_CREATED)

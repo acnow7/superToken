@@ -49,3 +49,14 @@ class SignIn(generics.CreateAPIView):
             })
         else:
             return Response({ 'msg': 'The username and/or password is incorrect.' }, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
+
+class SignOut(generics.DestroyAPIView):
+    def delete(self, request):
+        user = request.user
+        # Remove this token from the user
+        Token.objects.filter(user=user).delete()
+        user.token = None
+        user.save()
+        # Logout will remove all session data
+        logout(request)
+        return Response(status=status.HTTP_204_NO_CONTENT)

@@ -11,4 +11,6 @@ class Blog(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
-    
+def __str__(self):
+    # This must return a string
+    return f"Post: '{self.title}' by {self.author} created on {self.created_at}."

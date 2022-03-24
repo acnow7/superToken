@@ -13,7 +13,7 @@ class BlogSerializer(serializers.ModelSerializer):
 class UpdateBlogSerializer(serializers.ModelSerializer):
     class Meta:
         model = Blog
-        fields = ('id', 'content', 'updated_at', 'author')
+        fields = ('id', 'content', 'title', 'updated_at', 'author')
 
 class BlogSerializer1(serializers.ModelSerializer):
     class Meta:

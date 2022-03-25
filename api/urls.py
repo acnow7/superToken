@@ -1,7 +1,7 @@
 from django.urls import path
 from .views.user import SignUp, SignIn, SignOut, ChangePasswordView
 from .views.blog import BlogsView, BlogView, MyBlogsView
-from .views.comments import CommentView
+from .views.comments import CommentView, CommentUpdateView
 
 urlpatterns = [
     path('sign-up/', SignUp.as_view(), name='sign-up'),
@@ -11,5 +11,6 @@ urlpatterns = [
     path('blogs/', BlogsView.as_view(), name='blogs'),
     path('blogs/<int:pk>', BlogView.as_view(), name='blogs'),
     path('my-blogs/', MyBlogsView.as_view(), name='my-blogs'),
-    path('blogs/<int:pk>/comments', CommentView.as_view(), name='comments' )
+    path('blogs/<int:pk>/comments/', CommentView.as_view(), name='comments'),
+    path('comments/<int:pk>', CommentUpdateView.as_view(), name='comments' )
 ]
